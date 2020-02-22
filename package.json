@@ -1,0 +1,45 @@
+{
+  "name": "streem",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "scripts": {
+    "clean": "rm public/bundle.js",
+    "build-dev": "webpack -d --mode development",
+    "build": "webpack -p --mode production",
+    "start": "webpack-dev-server --hot --mode development --port 1234"
+  },
+  "dependencies": {
+    "@babel/core": "^7.7.5",
+    "@babel/preset-modules": "^0.1.1",
+    "@babel/preset-react": "^7.7.4",
+    "@isomorphic-git/lightning-fs": "^3.4.1",
+    "github-oauth": "^0.2.2",
+    "isomorphic-git": "^0.78.2",
+    "markdown-it": "^10.0.0",
+    "markdown-it-link-attributes": "^3.0.0",
+    "moment": "^2.24.0",
+    "natural": "^0.6.3",
+    "react": "^16.11.0",
+    "react-autosize-textarea": "^7.0.0",
+    "react-dom": "^16.11.0",
+    "react-hot-loader": "^4.12.16",
+    "react-player": "^1.15.2",
+    "scriptjs": "^2.5.9",
+    "scroll-into-view-if-needed": "^2.2.24",
+    "ulid": "^2.3.0",
+    "yaml": "^1.7.2"
+  },
+  "devDependencies": {
+    "@hot-loader/react-dom": "^16.11.0+4.12.16",
+    "babel-loader": "^8.0.6",
+    "css-loader": "^3.2.0",
+    "style-loader": "^1.0.0",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.9.0"
+  }
+}

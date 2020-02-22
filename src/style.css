@@ -1,0 +1,470 @@
+/* roboto-100 - latin */
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 100;
+  src: local("Roboto Thin"), local("Roboto-Thin"),
+    url("/fonts/roboto-v20-latin-100.woff2") format("woff2"),
+    /* Chrome 26+, Opera 23+, Firefox 39+ */
+      url("/fonts/roboto-v20-latin-100.woff") format("woff"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* roboto-300 - latin */
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 300;
+  src: local("Roboto Light"), local("Roboto-Light"),
+    url("/fonts/roboto-v20-latin-300.woff2") format("woff2"),
+    /* Chrome 26+, Opera 23+, Firefox 39+ */
+      url("/fonts/roboto-v20-latin-300.woff") format("woff"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* roboto-300italic - latin */
+@font-face {
+  font-family: "Roboto";
+  font-style: italic;
+  font-weight: 300;
+  src: local("Roboto Light Italic"), local("Roboto-LightItalic"),
+    url("/fonts/roboto-v20-latin-300italic.woff2") format("woff2"),
+    /* Chrome 26+, Opera 23+, Firefox 39+ */
+      url("/fonts/roboto-v20-latin-300italic.woff") format("woff"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* roboto-100italic - latin */
+@font-face {
+  font-family: "Roboto";
+  font-style: italic;
+  font-weight: 100;
+  src: local("Roboto Thin Italic"), local("Roboto-ThinItalic"),
+    url("/fonts/roboto-v20-latin-100italic.woff2") format("woff2"),
+    /* Chrome 26+, Opera 23+, Firefox 39+ */
+      url("/fonts/roboto-v20-latin-100italic.woff") format("woff"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* roboto-regular - latin */
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Roboto"), local("Roboto-Regular"),
+    url("/fonts/roboto-v20-latin-regular.woff2") format("woff2"),
+    /* Chrome 26+, Opera 23+, Firefox 39+ */
+      url("/fonts/roboto-v20-latin-regular.woff") format("woff"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* roboto-italic - latin */
+@font-face {
+  font-family: "Roboto";
+  font-style: italic;
+  font-weight: 400;
+  src: local("Roboto Italic"), local("Roboto-Italic"),
+    url("/fonts/roboto-v20-latin-italic.woff2") format("woff2"),
+    /* Chrome 26+, Opera 23+, Firefox 39+ */
+      url("/fonts/roboto-v20-latin-italic.woff") format("woff"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* roboto-500 - latin */
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 500;
+  src: local("Roboto Medium"), local("Roboto-Medium"),
+    url("/fonts/roboto-v20-latin-500.woff2") format("woff2"),
+    /* Chrome 26+, Opera 23+, Firefox 39+ */
+      url("/fonts/roboto-v20-latin-500.woff") format("woff"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* roboto-500italic - latin */
+@font-face {
+  font-family: "Roboto";
+  font-style: italic;
+  font-weight: 500;
+  src: local("Roboto Medium Italic"), local("Roboto-MediumItalic"),
+    url("/fonts/roboto-v20-latin-500italic.woff2") format("woff2"),
+    /* Chrome 26+, Opera 23+, Firefox 39+ */
+      url("/fonts/roboto-v20-latin-500italic.woff") format("woff"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* roboto-700italic - latin */
+@font-face {
+  font-family: "Roboto";
+  font-style: italic;
+  font-weight: 700;
+  src: local("Roboto Bold Italic"), local("Roboto-BoldItalic"),
+    url("/fonts/roboto-v20-latin-700italic.woff2") format("woff2"),
+    /* Chrome 26+, Opera 23+, Firefox 39+ */
+      url("/fonts/roboto-v20-latin-700italic.woff") format("woff"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* roboto-700 - latin */
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 700;
+  src: local("Roboto Bold"), local("Roboto-Bold"),
+    url("/fonts/roboto-v20-latin-700.woff2") format("woff2"),
+    /* Chrome 26+, Opera 23+, Firefox 39+ */
+      url("/fonts/roboto-v20-latin-700.woff") format("woff"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* roboto-900 - latin */
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 900;
+  src: local("Roboto Black"), local("Roboto-Black"),
+    url("/fonts/roboto-v20-latin-900.woff2") format("woff2"),
+    /* Chrome 26+, Opera 23+, Firefox 39+ */
+      url("/fonts/roboto-v20-latin-900.woff") format("woff"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* roboto-900italic - latin */
+@font-face {
+  font-family: "Roboto";
+  font-style: italic;
+  font-weight: 900;
+  src: local("Roboto Black Italic"), local("Roboto-BlackItalic"),
+    url("/fonts/roboto-v20-latin-900italic.woff2") format("woff2"),
+    /* Chrome 26+, Opera 23+, Firefox 39+ */
+      url("/fonts/roboto-v20-latin-900italic.woff") format("woff"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+* {
+  box-sizing: border-box;
+}
+body,
+html {
+  margin: 0;
+  padding: 0;
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.65;
+  /*color: #223;*/
+  color: rgb(48, 48, 48);
+}
+
+body,
+html,
+#app {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+p {
+  margin-bottom: 1.15rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  margin: 0.5em 0 0;
+  line-height: 1.15;
+}
+
+h1 {
+  font-size: 2.488em;
+}
+
+h2 {
+  font-size: 2.074em;
+}
+
+h3 {
+  font-size: 1.728em;
+}
+
+h4 {
+  font-size: 1.44em;
+}
+
+h5 {
+  font-size: 1.2em;
+}
+
+small,
+.text_small {
+  font-size: 0.833em;
+}
+
+small,
+.text_small {
+  font-size: 0.8em;
+}
+
+small,
+.text_small {
+  font-size: 0.8em;
+}
+
+img,
+video {
+  display: block;
+  max-width: 100%;
+  margin: auto;
+}
+
+.markdown {
+  display: inline;
+}
+.markdown p {
+  display: inline;
+  margin: 0;
+}
+
+main {
+  display: flex;
+  flex-direction: row;
+  flex: 1 1 0%;
+  overflow: hidden;
+}
+.mainbar {
+  display: flex;
+  flex-direction: column;
+  flex: 2 1 0%;
+}
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0%;
+  overflow-y: auto;
+}
+.streem {
+  width: 40rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+.input {
+  width: 40rem;
+  margin: auto;
+  flex: none;
+  padding: 1rem;
+  border-top: 1px solid #f0f0ff;
+  /*visibility: collapse;*/
+}
+.input.writing {
+  visibility: visible;
+}
+.path {
+  font-weight: bold;
+  font-size: 80%;
+  display: flex;
+  flex-direction: row;
+}
+.path div {
+  padding: 0.5rem 0;
+}
+.path div::after {
+  content: ">";
+  padding: 0 0.25rem;
+}
+
+ul,
+ol {
+  margin: 0;
+}
+li {
+  padding: 0;
+}
+
+.message {
+  padding: 0.25rem 0;
+  overflow-x: auto;
+  position: relative;
+  clear: both;
+  cursor: pointer;
+}
+.message p {
+  margin: 0;
+  display: inline;
+}
+hr {
+  margin-top: 0.5rem;
+  border-top: none;
+  border-bottom: 1px solid lightgray;
+}
+
+.player-wrapper {
+  position: relative;
+  padding-top: 56.25%; /* Player ratio: 100 / (1280 / 720) */
+}
+
+.react-player {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+twitter-widget {
+  margin: auto;
+}
+
+.editable {
+  cursor: pointer;
+}
+
+.toggler {
+  position: absolute;
+  padding-right: 1rem;
+  right: 100%;
+}
+.node {
+  position: relative;
+  cursor: pointer;
+}
+.node-content:hover {
+  background-color: rgba(45, 170, 219, 0.1);
+}
+.node.selected > .node-content {
+  background-color: rgba(45, 170, 219, 0.3);
+}
+.node.sentence {
+  display: inline-block;
+}
+.node .nodes {
+  padding-left: 2rem;
+  border-left: 1px solid lightgray;
+}
+.node-content {
+  user-select: none;
+}
+li > div {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+.node.continued > .node-content {
+  font-weight: bold;
+  /*  text-transform: uppercase; */
+  /* font-size: 80%; */
+  color: rgb(25, 116, 25);
+  /*
+  background-color: rgb(48, 48, 48);
+  color: white;
+  */
+  /*  border-top: 1px solid black; */
+  /* background-color: rgb(196, 196, 196);*/
+}
+.node.continued > .node-content > li:before {
+  content: "...";
+}
+li {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+}
+li:before {
+  display: block;
+  content: "•";
+  margin-right: 0.5rem;
+  transform: translateX(-50%);
+}
+
+.node.p .nodes {
+  border: none;
+}
+.ctrl .node-content:hover {
+  text-decoration: underline;
+}
+.node.filtered > .node-content {
+  text-decoration: underline;
+}
+
+input,
+textarea {
+  width: 100%;
+  border: none;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+textarea {
+  padding: 0.5rem;
+  resize: none;
+}
+
+.load-more {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.load-more button {
+  border: none;
+  flex: 1 1 auto;
+  background: none;
+  cursor: pointer;
+}
+
+.sidebar {
+  flex: 0 0 auto;
+  width: 15rem;
+  font-size: 80%;
+  max-height: 100%;
+  overflow-y: auto;
+  background-color: black;
+  color: white;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+}
+.toc {
+  flex: 1 1 auto;
+  padding: 1rem;
+}
+
+.searchbar {
+  flex: 1 1 0%;
+  font-size: 80%;
+  border-left: 1px solid lightgray;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+.search {
+  padding: 1rem;
+  border-bottom: 1px solid lightgray;
+}
+.search-results {
+  flex: 1 1 auto;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.node-date {
+  display: none;
+}
+
+.node.h2 > .node-date {
+  display: block;
+  color: lightgray;
+  font-size: 70%;
+}
+
+.error,
+.warning,
+.success {
+  display: block;
+}
+.error {
+  color: red;
+}
+.warning {
+  color: orange;
+}
+.success {
+  color: green;
+}
+
+.storage {
+  padding: 1rem;
+}
+.storage input {
+  border-bottom: 1px solid white;
+}

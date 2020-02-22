@@ -418,7 +418,7 @@ textarea {
   padding: 1rem;
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 736px) {
   .sidebar {
     width: 0;
   }

@@ -184,7 +184,7 @@ const App = () => {
           parent: selectedNodes[selectedNodes.length - 1]
         }
       ]);
-      streemRef.current.scrollTop = streemRef.current.scrollHeight;
+      //      streemRef.current.scrollTop = streemRef.current.scrollHeight;
       content.current.value = "";
     } catch (e) {
       console.error(e);
@@ -341,21 +341,17 @@ const App = () => {
     }
   }, [limit, nodes, filteredNodes]);
 
+  /*
   useEffect(() => {
     if (streemRef.current) {
       const diff = streemRef.current.scrollHeight - scrollHeight;
       if (diff > 0) {
         streemRef.current.scrollTop = diff;
         setScrollHeight(streemRef.current.scrollHeight);
-        /*
-        scrollIntoView(loadMoreRef.current, {
-          behavior: "smooth",
-          scrollMode: "if-needed"
-        });
-        */
       }
     }
   }, [streemRef.current, streem]);
+  */
 
   useEffect(() => {
     if (nodes && search) {

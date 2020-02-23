@@ -179,7 +179,7 @@ const App = () => {
         ...streem,
         {
           id: ulid(),
-          created: moment().format("YYYY-MM-DD HH:mm ZZ"),
+          created: +new Date(),
           content: content.current.value,
           parent: selectedNodes[selectedNodes.length - 1]
         }

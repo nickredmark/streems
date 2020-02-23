@@ -200,6 +200,7 @@ const completeNodes = (nodesSubset, nodes) => {
       parentId = parent.parent;
     }
   }
+  res.sort((a, b) => +a.created - +b.created);
   return res;
 };
 

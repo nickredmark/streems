@@ -476,3 +476,14 @@ textarea {
 .storage input {
   border-bottom: 1px solid white;
 }
+
+button {
+  background-color: transparent;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0 0.25rem;
+  margin: 0.25rem 0;
+  border: 1px solid white;
+}

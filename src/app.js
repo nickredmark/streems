@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { hot } from "react-hot-loader/root";
-import { plugins, clone, commit, add, push } from "isomorphic-git";
+import { plugins, clone, commit, add, push, pull } from "isomorphic-git";
 import LightningFS from "@isomorphic-git/lightning-fs";
 import { ulid } from "ulid";
 import moment from "moment";
@@ -57,10 +57,18 @@ const App = () => {
   const streemRef = useRef();
   const loadMoreRef = useRef();
   const startRepo = urlParams.get("repo");
-  const [repo, setRepo] = useState(startRepo);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [{ repo, username, token }, setCredentials] = useState({
+    repo: startRepo,
+    username: localStorage.getItem("username"),
+    token: localStorage.getItem("token")
+  });
+  const repoRef = useRef();
+  const usernameRef = useRef();
+  const tokenRef = useRef();
+
   const [status, setStatus] = useState({});
+
+  const [pulled, setPulled] = useState(false);
 
   const doSearch = search => {
     setNodeTrees(undefined);
@@ -97,8 +105,87 @@ const App = () => {
     }
   };
 
-  const save = async () => {
+  const pull = async (repo, username, token) => {
+    if (!repo) {
+      setNodes([]);
+      return;
+    }
     try {
+      await pfs.mkdir(dir);
+    } catch (e) {}
+
+    await clone({
+      dir,
+      corsProxy: "https://git.nmr.io",
+      url: `https://github.com/${repo}`, // "https://gist.github.com/73970fa686a71210ee34aa75f41f228a.git",
+      ref: "master",
+      singleBranch: true,
+      depth: 2,
+      username,
+      token
+    });
+
+    let raw;
+    try {
+      raw = await pfs.readFile(`${dir}/${file}`, "utf8");
+    } catch (e) {
+      raw = "";
+    }
+    const parts = raw.split(/\n---\n/).filter(Boolean);
+    const streem = [];
+    for (const part of parts) {
+      const node = {};
+      const lines = part.split("\n");
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        if (!line) {
+          node.content = lines
+            .slice(i)
+            .join("\n")
+            .trim();
+          break;
+        }
+
+        const index = line.indexOf(":");
+        const key = line.slice(0, index).trim();
+        const value = line.slice(index + 1).trim();
+        node[key] = value;
+      }
+      streem.push(node);
+    }
+    setNodes(streem);
+    setPulled(true);
+  };
+
+  const save = async nodes => {
+    try {
+      const mdl = nodes
+        .map(node => {
+          let res = Object.keys(node)
+            .filter(key => key !== "content")
+            .filter(key => node[key] !== undefined && node[key] !== null)
+            .map(
+              key =>
+                `${key.trim()}: ${
+                  typeof node[key] === "string" ? node[key].trim() : node[key]
+                }\n`
+            )
+            .join("");
+          if (node.content) {
+            res += "\n" + node.content + "\n";
+          }
+          return res;
+        })
+        .join("---\n");
+      await pfs.writeFile(`${dir}/${file}`, mdl);
+      await add({ dir, filepath: file });
+      if (!username || !token) {
+        setStatus({
+          type: "error",
+          message: "GitHub credentials needed to save your changes."
+        });
+        return;
+      }
       await commit({
         dir,
         message: "Streem changes",
@@ -107,64 +194,30 @@ const App = () => {
           email: username
         }
       });
-      setStatus({ type: "warning", message: "Saving..." });
+      setStatus({ type: "warning", message: "Syncing..." });
       await push({
         dir,
         username,
-        password
+        token
       });
-      setStatus({ type: "success", message: "Saved" });
+      setStatus({ type: "success", message: "Synced" });
     } catch (e) {
       console.error(e);
       setStatus({ type: "error", message: "Saving failed." });
     }
   };
 
-  const updateStreem = async (message, update) => {
-    const newStreem = await new Promise(res =>
-      setNodes(streem => {
-        const newStreem = update(streem);
-        res(newStreem);
-        return newStreem;
+  const updateStreem = async update => {
+    const newNodes = await new Promise(res =>
+      setNodes(nodes => {
+        const newNodes = update(nodes);
+        res(newNodes);
+        return newNodes;
       })
     );
-    setStatus({ type: "warning", message: "Unsaved" });
+    setStatus({ type: "warning", message: "Not synced" });
 
-    (async () => {
-      try {
-        const mdl = newStreem
-          .map(node => {
-            let res = Object.keys(node)
-              .filter(key => key !== "content")
-              .filter(key => node[key] !== undefined && node[key] !== null)
-              .map(
-                key =>
-                  `${key.trim()}: ${
-                    typeof node[key] === "string" ? node[key].trim() : node[key]
-                  }\n`
-              )
-              .join("");
-            if (node.content) {
-              res += "\n" + node.content + "\n";
-            }
-            return res;
-          })
-          .join("---\n");
-        await pfs.writeFile(`${dir}/${file}`, mdl);
-        await add({ dir, filepath: file });
-        if (!username || !password) {
-          setStatus({
-            type: "error",
-            message: "GitHub credentials needed to save your changes."
-          });
-          return;
-        }
-        await save();
-      } catch (e) {
-        console.error(e);
-        throw e;
-      }
-    })();
+    save(newNodes);
   };
 
   const newNode = async e => {
@@ -175,7 +228,7 @@ const App = () => {
       if (!content.current.value) {
         return;
       }
-      await updateStreem(content.current.value, streem => [
+      await updateStreem(streem => [
         ...streem,
         {
           id: ulid(),
@@ -198,7 +251,7 @@ const App = () => {
         e.preventDefault();
         e.stopPropagation();
         if (e.shiftKey) {
-          await updateStreem(`outdent ${selectedNodes.join(",")}`, streem => {
+          await updateStreem(streem => {
             const parent = findParent(selectedNodes[0], streem);
             if (parent) {
               return streem.map(node =>
@@ -210,7 +263,7 @@ const App = () => {
             return streem;
           });
         } else {
-          await updateStreem(`indent ${selectedNodes.join(",")}`, streem => {
+          await updateStreem(streem => {
             const prev = findPrev(selectedNodes[0], streem);
             if (prev) {
               return streem.map(node =>
@@ -253,7 +306,7 @@ const App = () => {
         setCtrl(true);
       } else if (e.key === "Backspace" && e.ctrlKey && selectedNodes.length) {
         selectNode();
-        updateStreem(`delete ${selectedNodes.join(",")}`, streem =>
+        updateStreem(streem =>
           streem.map(node =>
             selectedNodes.includes(node.id) ? { ...node, deleted: true } : node
           )
@@ -277,51 +330,28 @@ const App = () => {
   useEffect(() => {
     (async () => {
       try {
-        if (!repo) {
-          setNodes([]);
-          return;
+        if (!pulled) {
+          await pull(repo, username, token);
         }
-        await pfs.mkdir(dir);
-        await clone({
-          dir,
-          corsProxy: "https://git.nmr.io",
-          url: `https://github.com/${repo}`, // "https://gist.github.com/73970fa686a71210ee34aa75f41f228a.git",
-          ref: "master",
-          singleBranch: true,
-          depth: 2
-        });
-        if (!pfs.exi) await pfs.stat(`${dir}/${file}`);
-
-        const raw = await pfs.readFile(`${dir}/${file}`, "utf8");
-        const parts = raw.split(/\n---\n/).filter(Boolean);
-        const streem = [];
-        for (const part of parts) {
-          const node = {};
-          const lines = part.split("\n");
-          for (let i = 0; i < lines.length; i++) {
-            const line = lines[i];
-            if (!line) {
-              node.content = lines
-                .slice(i)
-                .join("\n")
-                .trim();
-              break;
-            }
-
-            const index = line.indexOf(":");
-            const key = line.slice(0, index).trim();
-            const value = line.slice(index + 1).trim();
-            node[key] = value;
-          }
-          streem.push(node);
+        if (username && token) {
+          localStorage.setItem("username", username);
+          localStorage.setItem("token", token);
         }
-        setNodes(streem);
       } catch (e) {
         console.error(e);
+        setNodes([]);
+        setStatus({
+          type: "error",
+          message: "Could not pull repo."
+        });
         throw e;
       }
+      setNodes(nodes => {
+        save(nodes);
+        return nodes;
+      });
     })();
-  }, [repo]);
+  }, [repo, username, token]);
 
   useEffect(() => {
     if (nodes) {
@@ -382,7 +412,7 @@ const App = () => {
       <div
         className="sidebar"
         onKeyDown={e => {
-          if (e.key === "Tab") {
+          if (e.key === "Tab" || e.key === "Enter") {
             e.stopPropagation();
           }
         }}
@@ -394,92 +424,105 @@ const App = () => {
           <div className="storage">
             <h4>Storage</h4>
             <form
-              onSubmit={e => {
+              onSubmit={async e => {
                 e.preventDefault();
-                save();
+                setCredentials({
+                  repo: repoRef.current.value,
+                  username: usernameRef.current.value,
+                  token: tokenRef.current.value
+                });
               }}
             >
               <input
                 placeholder="GitHub repo, e.g. nmaro/notes"
-                value={repo}
-                onChange={e => setRepo(e.target.value)}
+                ref={repoRef}
+                defaultValue={repo}
               />
               <input
                 placeholder="GitHub email"
-                value={username}
-                onChange={e => setUsername(e.target.value)}
+                ref={usernameRef}
+                defaultValue={username}
               />
               <input
                 type="password"
-                placeholder="GitHub password or token"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
+                placeholder="GitHub access token"
+                ref={tokenRef}
+                defaultValue={token}
               />
-              <button type="submit" style={{ visibility: "collapse" }} />
+              <button type="submit">Sync</button>
             </form>
             <span className={status.type}>{status.message}</span>
           </div>
         }
       </div>
       <div className="mainbar" onClick={() => selectNode()}>
-        <div className="content" ref={streemRef}>
-          <div className="streem">
-            {limit < filteredNodes.length && (
-              <div
-                className="load-more"
-                onClick={() => setLimit(limit + 100)}
-                ref={loadMoreRef}
-              >
-                <button>Load more</button>
+        {!repo || pulled ? (
+          <>
+            <div className="content" ref={streemRef}>
+              <div className="streem">
+                {limit < filteredNodes.length && (
+                  <div
+                    className="load-more"
+                    onClick={() => setLimit(limit + 100)}
+                    ref={loadMoreRef}
+                  >
+                    <button>Load more</button>
+                  </div>
+                )}
+                <Streem
+                  depth={0}
+                  tree={streem}
+                  selectedNodes={selectedNodes}
+                  scrolledNode={scrolledNode}
+                  selectNode={selectNode}
+                  filteredNode={filteredNode}
+                  filterNode={filterNode}
+                  setSearch={search => {
+                    doSearch(search);
+                    searchInput.current.value = search;
+                  }}
+                />
+                {limit > WINDOW && (
+                  <div
+                    className="load-more"
+                    onClick={() => setLimit(limit - 100)}
+                    ref={loadMoreRef}
+                  >
+                    <button>Load more</button>
+                  </div>
+                )}
               </div>
-            )}
-            <Streem
-              depth={0}
-              tree={streem}
-              selectedNodes={selectedNodes}
-              scrolledNode={scrolledNode}
-              selectNode={selectNode}
-              filteredNode={filteredNode}
-              filterNode={filterNode}
-              setSearch={search => {
-                doSearch(search);
-                searchInput.current.value = search;
-              }}
-            />
-            {limit > WINDOW && (
-              <div
-                className="load-more"
-                onClick={() => setLimit(limit - 100)}
-                ref={loadMoreRef}
-              >
-                <button>Load more</button>
-              </div>
-            )}
-          </div>
-        </div>
-        <div
-          className={`input ${writing ? "writing" : ""}`}
-          onClick={e => e.stopPropagation()}
-        >
-          {selectedNodes.length > 0 && (
-            <div className="path">
-              {findNode(selectedNodes[selectedNodes.length - 1], nodes).content}
             </div>
-          )}
-          <form onSubmit={newNode}>
-            <TextareaAutosize
-              placeholder="type a thought"
-              autoFocus
-              onKeyDown={e => {
-                if (!e.shiftKey && e.key === "Enter") {
-                  e.preventDefault();
-                  newNode();
-                }
-              }}
-              ref={content}
-            />
-          </form>
-        </div>
+            <div
+              className={`input ${writing ? "writing" : ""}`}
+              onClick={e => e.stopPropagation()}
+            >
+              {selectedNodes.length > 0 && (
+                <div className="path">
+                  {
+                    findNode(selectedNodes[selectedNodes.length - 1], nodes)
+                      .content
+                  }
+                </div>
+              )}
+              <form onSubmit={newNode}>
+                <TextareaAutosize
+                  placeholder="type a thought"
+                  autoFocus
+                  onKeyDown={e => {
+                    if (!e.shiftKey && e.key === "Enter") {
+                      e.preventDefault();
+                      newNode();
+                    }
+                  }}
+                  ref={content}
+                />
+              </form>
+            </div>
+          </>
+        ) : (
+          <span>Repository not pulled yet</span>
+        )}
       </div>
       <div
         className="searchbar"

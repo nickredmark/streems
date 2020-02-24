@@ -32,9 +32,6 @@ const md = MD({
 
 const dir = "/repo";
 const file = "streem.mdl";
-const fs = new LightningFS("fs", { wipe: true });
-plugins.set("fs", fs);
-window.pfs = fs.promises;
 
 const App = () => {
   const urlParams = new URLSearchParams(window.location.search);
@@ -110,6 +107,13 @@ const App = () => {
       setNodes([]);
       return;
     }
+    let pfs = window.pfs;
+    if (!pfs) {
+      const fs = new LightningFS(repo, { wipe: true });
+      plugins.set("fs", fs);
+      window.pfs = fs.promises;
+      pfs = window.pfs;
+    }
     try {
       await pfs.mkdir(dir);
     } catch (e) {}
@@ -159,6 +163,10 @@ const App = () => {
 
   const save = async nodes => {
     try {
+      const pfs = window.pfs;
+      if (!pfs) {
+        return;
+      }
       const mdl = nodes
         .map(node => {
           let res = Object.keys(node)
@@ -456,73 +464,72 @@ const App = () => {
         }
       </div>
       <div className="mainbar" onClick={() => selectNode()}>
-        {!repo || pulled ? (
-          <>
-            <div className="content" ref={streemRef}>
-              <div className="streem">
-                {limit < filteredNodes.length && (
-                  <div
-                    className="load-more"
-                    onClick={() => setLimit(limit + 100)}
-                    ref={loadMoreRef}
-                  >
-                    <button>Load more</button>
-                  </div>
-                )}
-                <Streem
-                  depth={0}
-                  tree={streem}
-                  selectedNodes={selectedNodes}
-                  scrolledNode={scrolledNode}
-                  selectNode={selectNode}
-                  filteredNode={filteredNode}
-                  filterNode={filterNode}
-                  setSearch={search => {
-                    doSearch(search);
-                    searchInput.current.value = search;
-                  }}
-                />
-                {limit > WINDOW && (
-                  <div
-                    className="load-more"
-                    onClick={() => setLimit(limit - 100)}
-                    ref={loadMoreRef}
-                  >
-                    <button>Load more</button>
-                  </div>
-                )}
-              </div>
-            </div>
-            <div
-              className={`input ${writing ? "writing" : ""}`}
-              onClick={e => e.stopPropagation()}
-            >
-              {selectedNodes.length > 0 && (
-                <div className="path">
-                  {
-                    findNode(selectedNodes[selectedNodes.length - 1], nodes)
-                      .content
-                  }
+        {!repo ||
+          (pulled && (
+            <>
+              <div className="content" ref={streemRef}>
+                <div className="streem">
+                  {limit < filteredNodes.length && (
+                    <div
+                      className="load-more"
+                      onClick={() => setLimit(limit + 100)}
+                      ref={loadMoreRef}
+                    >
+                      <button>Load more</button>
+                    </div>
+                  )}
+                  <Streem
+                    depth={0}
+                    tree={streem}
+                    selectedNodes={selectedNodes}
+                    scrolledNode={scrolledNode}
+                    selectNode={selectNode}
+                    filteredNode={filteredNode}
+                    filterNode={filterNode}
+                    setSearch={search => {
+                      doSearch(search);
+                      searchInput.current.value = search;
+                    }}
+                  />
+                  {limit > WINDOW && (
+                    <div
+                      className="load-more"
+                      onClick={() => setLimit(limit - 100)}
+                      ref={loadMoreRef}
+                    >
+                      <button>Load more</button>
+                    </div>
+                  )}
                 </div>
-              )}
-              <form onSubmit={newNode}>
-                <TextareaAutosize
-                  placeholder="type a thought"
-                  autoFocus
-                  onKeyDown={e => {
-                    if (!e.shiftKey && e.key === "Enter") {
-                      e.preventDefault();
-                      newNode();
+              </div>
+              <div
+                className={`input ${writing ? "writing" : ""}`}
+                onClick={e => e.stopPropagation()}
+              >
+                {selectedNodes.length > 0 && (
+                  <div className="path">
+                    {
+                      findNode(selectedNodes[selectedNodes.length - 1], nodes)
+                        .content
                     }
-                  }}
-                  ref={content}
-                />
-              </form>
-            </div>
-          </>
-        ) : (
-          <span>Repository not pulled yet</span>
-        )}
+                  </div>
+                )}
+                <form onSubmit={newNode}>
+                  <TextareaAutosize
+                    placeholder="type a thought"
+                    autoFocus
+                    onKeyDown={e => {
+                      if (!e.shiftKey && e.key === "Enter") {
+                        e.preventDefault();
+                        newNode();
+                      }
+                    }}
+                    ref={content}
+                  />
+                </form>
+              </div>
+            </>
+          ))}
       </div>
       <div
         className="searchbar"
